@@ -1,0 +1,78 @@
+<h2 id="deep-linking">Deep Linking</h2>
+
+<p>Deep linking is the usage of the URL, which will take to specific page (content) directly without traversing application from home page [1]. It helps in easily searchable and indexed in search engines like Google, Yahoo &amp; etc.</p>
+
+<p><strong>Examples for deep linking urls</strong>: <br>
+<a href="http://www.divami.com/blog/angular-deep-linking/">http://www.divami.com/blog/angular-deep-linking/</a> <br>
+<a href="https://www.linkedin.com/groups/4314060/profile">https://www.linkedin.com/groups/4314060/profile</a> <br>
+<a href="https://www.facebook.com/pages/JavaScript/113124472034820">https://www.facebook.com/pages/JavaScript/113124472034820</a></p>
+
+<h2 id="deep-linking-in-angular">Deep Linking in Angular</h2>
+
+<p><strong>With ‘#’</strong>: <br>
+Angular by default supports deep linking using <strong>‘#’</strong>. <br>
+Ex: <a href="https://www.deeplinking.com#/deep/linking">https://www.deeplinking.com#/deep/linking</a></p>
+
+<p>It has following drawbacks</p>
+
+<ul>
+<li>Search engines (SEO) don’t recognise the url after ‘#’, so the page full path don’t indexed.</li>
+<li>Google analytics also don’t  capture the url after ‘#’, so we may not get results as we want.</li>
+<li>Readability will decrease</li>
+</ul>
+
+<p><strong>Removing ‘#’</strong>:  <br>
+ We have to do following to get out of ‘#’ in url.</p>
+
+<ol>
+<li><p><strong>Enable html5Mode</strong>: We have to enable this in application config file.</p>
+
+<blockquote>
+  <p>$locationProvider.html5Mode(true).hashPrefix(‘!’);</p>
+</blockquote>
+
+<p>Some browsers don’t support html5Mode, for that we need to add hashPrefix(‘!’).</p></li>
+<li><p><strong>Loading files</strong>: Generally in header we include files as follows</p>
+
+<blockquote>
+  <p><code>&lt;script src="vendor/angular.js"&gt;&lt;/script&gt;</code> </p>
+</blockquote>
+
+<p>After enabling html5Mode, files may not load correctly. To fix this we have to set</p>
+
+<blockquote>
+  <p><code>&lt;base</code><strong><code>href="/"</code></strong><code>/&gt;</code> <br>
+  or <br>
+  <code>&lt;script</code><strong><code>src="/vendor/angular.js"</code></strong><code>&gt;&lt;/script&gt;</code></p>
+</blockquote>
+
+<p><strong>Note</strong>: If you mention href value as <strong>‘/’</strong>, it will refer to server url. If you want to point to other domain path, which can set to href (Ex: In localhost it will not work with <strong>‘/’</strong>, so we need to mention it as <code>&lt;base href="http://localhost/appFolder/" /&gt;</code></p></li>
+<li><p><strong>Enabling Redirection</strong>: Reload &amp; Refresh will not work after <strong>html5Mode</strong> is enabled, because browser will check for folders and it leads to <code>404 Not Found</code>. To get it worked we need to redirect to <code>index.html</code> file, we have to add following in <code>.htaccess</code> file (or in sever configuration)[2]:</p>
+
+<blockquote>
+<pre><code>RewriteEngine on
+
+# Don't rewrite files or directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+ # Rewrite everything else to index.html to allow html5 state links
+RewriteRule ^ index.html [L]
+</code></pre>
+</blockquote>
+
+<p><strong>Note</strong>: If you are using <code>debug.html</code> for development and <code>index.html</code> for production, then you have to redirect to debug.html instead of index.html for development purpose.</p></li>
+<li><p>You need to remove <strong>‘#’s</strong> before urls if you use any. We use it when we use  $routeProvider as follows:</p>
+
+<blockquote>
+  <p><code>&lt;a href="#deep/linking"&gt;Deep Linking&lt;/a&gt;</code></p>
+</blockquote></li>
+</ol>
+
+<p><strong>References</strong>:</p>
+
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Deep_linking">https://en.wikipedia.org/wiki/Deep_linking</a></li>
+<li><a href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode</a></li>
+</ol>
